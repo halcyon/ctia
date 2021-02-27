@@ -1,0 +1,133 @@
+#+TITLE: Search Vulnerabilities by CPE Identifiers
+#+AUTHOR: Cisco Threat Response Services
+#+PROPERTY: eval no
+
+* CPE
+  #+BEGIN_QUOTE
+  CPE is a structured naming scheme for information technology systems,
+  software, and packages. Based upon the generic syntax for Uniform
+  Resource Identifiers (URI), CPE includes a formal name format, a
+  method for checking names against a system, and a description format
+  for binding text and tests to a name.
+  #+END_QUOTE
+
+  Further information on CPE can be found at [[https://nvd.nist.gov/products/cpe]]
+
+* Searching Vulnerabilities by CPE Identifiers
+  CTIA provides a way to query for vulnerabilities with configurations
+  that match combinations of CPE identifiers.
+
+  The route is available through the endpoint ~GET
+  /ctia/vulnerability/cpe_ids~ and requires the query string include a
+  ~cpe_ids~ parameter with space delimited CPE identifiers.
+
+  Query string parameters documented in the endpoint [[file:search-metrics.org][~GET
+  /ctia/{entity-type}/search~]] can be used with ~GET
+  /ctia/vulnerability/cpe_ids~
+
+  A user can retrieve vulnerabilities applicable to various
+  combinations of hardware and software. The following example URL
+  encodes a whitespace delimited string of the CPE identifiers
+  `cpe:2.3:o:cisco:ios_xe:16.6.5:*:*:*:*:*:*:*`
+  `cpe:2.3:h:cisco:catalyst_3650-12x48uq:-:*:*:*:*:*:*:*`.
+
+
+  #+BEGIN_SRC http :pretty
+    GET http://localhost:3000/ctia/vulnerability/cpe_ids?limit=1&cpe_ids=cpe%3A2.3%3Ao%3Acisco%3Aios_xe%3A16.6.5%3A*%3A*%3A*%3A*%3A*%3A*%3A*%20cpe%3A2.3%3Ah%3Acisco%3Acatalyst_3650-12x48uq%3A-%3A*%3A*%3A*%3A*%3A*%3A*%3A*
+    Content-Type: application/json
+
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  [
+    {
+      "description": "Multiple vulnerabilities in the web-based user interface (Web UI) of Cisco IOS XE Software could allow an authenticated, remote attacker to execute commands with elevated privileges on the affected device. For more information about these vulnerabilities, see the Details section of this advisory.",
+      "schema_version": "1.1.0",
+      "published_date": "2019-09-25T20:15:00.000Z",
+      "configurations": {
+        "CVE_data_version": "4.0",
+        "nodes": [
+          {
+            "operator": "OR",
+            "cpe_match": [
+              {
+                "vulnerable": true,
+                "cpe23Uri": "cpe:2.3:o:cisco:ios:16.11.1:*:*:*:*:*:*:*"
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "operator": "OR",
+                "cpe_match": [
+                  {
+                    "vulnerable": true,
+                    "cpe23Uri": "cpe:2.3:o:cisco:ios_xe:16.6.5:*:*:*:*:*:*:*"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "cpe_match": [
+                  {
+                    "vulnerable": false,
+                    "cpe23Uri": "cpe:2.3:h:cisco:catalyst_3650-12x48uq:-:*:*:*:*:*:*:*"
+                  },
+                  {
+                    "vulnerable": false,
+                    "cpe23Uri": "cpe:2.3:h:cisco:catalyst_3650-12x48ur:-:*:*:*:*:*:*:*"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "operator": "AND",
+            "children": [
+              {
+                "operator": "OR",
+                "cpe_match": [
+                  {
+                    "vulnerable": true,
+                    "cpe23Uri": "cpe:2.3:o:cisco:ios_xe:17.1.1:*:*:*:*:*:*:*"
+                  }
+                ]
+              },
+              {
+                "operator": "OR",
+                "cpe_match": [
+                  {
+                    "vulnerable": false,
+                    "cpe23Uri": "cpe:2.3:h:cisco:catalyst_3650-12x48uq:-:*:*:*:*:*:*:*"
+                  },
+                  {
+                    "vulnerable": false,
+                    "cpe23Uri": "cpe:2.3:h:cisco:catalyst_3650-12x48ur:-:*:*:*:*:*:*:*"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "type": "vulnerability",
+      "source": "National Vulnerability Database",
+      "external_ids": [
+        "hydrant-6f760bd8b07d91817aace189e2a5eeb078f29333a588be817b28806f98b07124"
+      ],
+      "title": "CVE-2019-12650",
+      "source_uri": "https://nvd.nist.gov/",
+      "language": "en",
+      "id": "http://localhost:3000/ctia/vulnerability/vulnerability-b1022932-3539-40c6-937d-07007f898d16",
+      "tlp": "green",
+      "groups": [
+        "Administrators"
+      ],
+      "timestamp": "2019-10-09T23:45:00.000Z",
+      "last_modified_date": "2019-10-09T23:45:00.000Z"
+    }
+  ]
+  #+end_example
